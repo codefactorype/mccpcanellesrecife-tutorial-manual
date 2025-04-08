@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tutorial para utilização da página Balanço Financeiro Mensal. Guia completo para gerenciar suas finanças de forma dinâmica e prática.">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <title>Tutorial: Balanço Financeiro Mensal</title>
+  <!-- Importando fontes do Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    /* 
+      Definindo variáveis CSS para cores e espaçamentos que facilitarão futuras manutenções
+    */
+    :root {
+      --color-background: #ecf0f1; /* Fundo neutro */
+      --color-text: #2c3e50; /* Texto principal */
+      --color-link: #3498db; /* Azul harmônico para links */
+      --color-nav: rgba(44, 62, 80, 0.6); /* Cor de fundo da navegação */
+      --color-overlay: rgba(44, 62, 80, 0.7); /* Overlay para o cabeçalho */
+      --color-border: #bdc3c7; /* Bordas e separadores */
+      --color-secondary: #7f8c8d; /* Texto secundário, ex: rodapé */
+    }
+
+    /* Reset e Configurações de Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      background-color: var(--color-background);
+      font-family: 'Open Sans', sans-serif;
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+    a {
+      color: var(--color-link);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Cabeçalho com imagem de fundo e overlay */
+    header {
+      /* Aplicando gradiente sobre a imagem para garantir boa legibilidade */
+      background: linear-gradient(var(--color-overlay), var(--color-overlay)),
+                  url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')
+                  center center no-repeat;
+      background-size: cover;
+      color: var(--color-background);
+      min-height: 300px;
+      position: relative;
+    }
+
+    /* Barra de Navegação */
+    nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--color-nav);
+      padding: 10px 20px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    nav li {
+      margin: 0 15px;
+    }
+    nav li a {
+      font-weight: bold;
+      font-size: 1em;
+      color: var(--color-background);
+    }
+
+    /* Título e descrição no cabeçalho */
+    .blog-header {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    }
+    .blog-header h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: var(--color-background);
+    }
+    .blog-header p {
+      font-size: 1.2em;
+      color: var(--color-background);
+    }
+
+    /* Container principal (layout tipo "blog") */
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilização de títulos, separadores e listas */
+    h2, h3 {
+      margin-bottom: 10px;
+      color: var(--color-text);
+    }
+    h2 {
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: 5px;
+      margin-top: 20px;
+    }
+    hr {
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid var(--color-border);
+    }
+    ul {
+      list-style: disc;
+      margin: 0 0 1em 20px;
+    }
+    code {
+      background-color: var(--color-background);
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 0.95em;
+    }
+
+    /* Rodapé */
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.9em;
+      color: var(--color-secondary);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+      }
+      nav li {
+        margin: 10px 0;
+      }
+      .blog-header h1 {
+        font-size: 2em;
+      }
+      .container {
+        margin: 20px 10px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho do Blog -->
+  <header>
+    <!-- Barra de Navegação -->
+    <nav>
+      <ul>
+        <li><a href="#visao-geral">Visão Geral</a></li>
+        <li><a href="#selecao-periodo">Período</a></li>
+        <li><a href="#insercao-saldo-inicial">Saldo Inicial</a></li>
+        <li><a href="#registro-transacoes">Transações</a></li>
+        <li><a href="#calculo-totais">Totais</a></li>
+        <li><a href="#exportacao-pdf">Exportação</a></li>
+      </ul>
+    </nav>
+
+    <!-- Título e Subtítulo -->
+    <div class="blog-header">
+      <h1>Tutorial: Balanço Financeiro Mensal (manual)</h1>
+      <p>Guia Completo para Gerenciar suas Finanças com Eficiência</p>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="container">
+    <article>
+      <!-- 1. Visão Geral da Página -->
+      <section id="visao-geral">
+        <h2>1. Visão Geral da Página</h2>
+        <p>A página foi desenvolvida para auxiliar no controle financeiro mensal, permitindo o registro de receitas e despesas, o cálculo automático dos totais e a geração de um PDF com o balancete final. Ela conta com seções para definir o período (mês e ano), inserir o <strong>Saldo Inicial</strong>, registrar transações e visualizar os totais atualizados, além de modais informativos para esclarecimentos sobre cada item.</p>
+      </section>
+      <hr>
+
+      <!-- 2. Seleção do Período e Atualização do Título -->
+      <section id="selecao-periodo">
+        <h2>2. Seleção do Período e Atualização do Título</h2>
+        <h3>Passo 2.1: Seleção do Mês</h3>
+        <ul>
+          <li><strong>Local:</strong> Na parte superior da página, dentro do cabeçalho principal (balancete).</li>
+          <li><strong>Como fazer:</strong> Selecione o mês desejado no campo “Mês”. Note que o mês atualmente selecionado é “Novembro”, mas você pode escolher qualquer um na lista.</li>
+        </ul>
+        <h3>Passo 2.2: Definir o Ano</h3>
+        <ul>
+          <li><strong>Local:</strong> Ao lado da seleção do mês.</li>
+          <li><strong>Como fazer:</strong> Informe o ano desejado no campo numérico (por padrão, vem preenchido com “2024”).</li>
+        </ul>
+        <h3>Passo 2.3: Atualizar o Título</h3>
+        <ul>
+          <li><strong>Botão:</strong> Clique no botão “Atualizar”.</li>
+          <li><strong>O que acontece:</strong> O título da página (na área “Balancete Mensal”) será atualizado para refletir o mês e ano escolhidos, por exemplo: “Balancete Mensal - Novembro 2024”.</li>
+        </ul>
+      </section>
+      <hr>
+
+      <!-- 3. Inserção e Formatação do Saldo Inicial -->
+      <section id="insercao-saldo-inicial">
+        <h2>3. Inserção e Formatação do Saldo Inicial</h2>
+        <h3>Passo 3.1: Inserir o Saldo Inicial</h3>
+        <ul>
+          <li><strong>Local:</strong> Logo abaixo do título do balancete.</li>
+          <li><strong>Como fazer:</strong> No campo “Saldo Inicial (banco)”, insira o valor disponível no início do mês. <em>Exemplo:</em> Digite “R$ 500,00”.</li>
+        </ul>
+        <h3>Passo 3.2: Formatação Automática</h3>
+        <ul>
+          <li><strong>Quando:</strong> Ao sair do campo (evento “blur”) ou pressionando a tecla Enter.</li>
+          <li><strong>O que acontece:</strong> O valor inserido é formatado automaticamente para o padrão de moeda brasileiro (R$). Se o valor inserido não for válido, o campo será reajustado para “R$ 0,00”.</li>
+        </ul>
+      </section>
+      <hr>
+
+      <!-- 4. Registro de Transações (Receitas e Despesas) -->
+      <section id="registro-transacoes">
+        <h2>4. Registro de Transações (Receitas e Despesas)</h2>
+        <h3>4.1 Seção de Receitas</h3>
+        <ul>
+          <li>
+            <strong>Estrutura da Tabela:</strong>
+            <ul>
+              <li><strong>DATA:</strong> Insira a data da receita (tipo data).</li>
+              <li><strong>DESCRIÇÃO:</strong> Informe uma breve descrição da entrada financeira.</li>
+              <li><strong>VALOR:</strong> Digite o valor da receita (campo com formatação de moeda, que será atualizado automaticamente).</li>
+            </ul>
+          </li>
+          <li><strong>Adicionar Linhas:</strong> Clique no botão “Adicionar Linha” para incluir uma nova linha na tabela de receitas.</li>
+          <li>
+            <strong>Remover Linhas:</strong> Clique no botão “Remover Linha” para excluir a última linha inserida.
+            <br>
+            <em>Observação:</em> A remoção não pode eliminar todas as linhas; pelo menos uma linha deve permanecer.
+          </li>
+          <li><strong>Navegação entre os Campos:</strong> Pressione a tecla Enter para navegar entre os campos. Se o usuário estiver no último campo e pressionar Enter, uma nova linha será adicionada e o foco passará para o novo campo.</li>
+        </ul>
+
+        <h3>4.2 Seção de Despesas</h3>
+        <ul>
+          <li>
+            <strong>Estrutura da Tabela:</strong>
+            <ul>
+              <li><strong>DATA:</strong> Insira a data da despesa.</li>
+              <li><strong>DESCRIÇÃO:</strong> Informe o tipo ou motivo da despesa.</li>
+              <li><strong>VALOR:</strong> Digite o valor da despesa com formatação automática.</li>
+            </ul>
+          </li>
+          <li><strong>Adicionar/Remover Linhas:</strong> Mesmo procedimento da seção de receitas.</li>
+          <li><strong>Formatação e Navegação:</strong> Igual ao processo explicado na seção de receitas.</li>
+        </ul>
+      </section>
+      <hr>
+
+      <!-- 5. Cálculo e Visualização dos Totais -->
+      <section id="calculo-totais">
+        <h2>5. Cálculo e Visualização dos Totais</h2>
+        <h3>Passo 5.1: Cálculo Automático</h3>
+        <ul>
+          <li>
+            <strong>Como funciona:</strong> A cada modificação nos valores (Saldo Inicial, receitas ou despesas), a função <code>calculateTotals</code> é chamada para recalcular:
+            <ul>
+              <li><strong>Saldo Inicial:</strong> Valor digitado e formatado.</li>
+              <li><strong>Total de Receitas:</strong> Soma de todos os valores inseridos na tabela de receitas.</li>
+              <li><strong>Total de Despesas:</strong> Soma de todos os valores inseridos na tabela de despesas.</li>
+              <li><strong>Saldo Atual:</strong> Calculado como <strong>Saldo Inicial + Total de Receitas - Total de Despesas</strong>.</li>
+            </ul>
+          </li>
+        </ul>
+        <h3>Passo 5.2: Visualização</h3>
+        <ul>
+          <li><strong>Local:</strong> Os totais são exibidos em uma tabela de resumo na seção “Totais”.</li>
+          <li><strong>Formato:</strong> Cada valor é exibido no padrão monetário brasileiro.</li>
+        </ul>
+      </section>
+      <hr>
+
+      <!-- 7. Exportação dos Dados para PDF -->
+      <section id="exportacao-pdf">
+        <h2>7. Exportação dos Dados para PDF</h2>
+        <h3>Passo 7.1: Preparação para Exportação</h3>
+        <ul>
+          <li><strong>Botão:</strong> Clique no botão “Exportar Dados” na seção de totais.</li>
+          <li>
+            <strong>O que acontece:</strong> Todo o conteúdo (transações e totais) é clonado e processado:
+            <ul>
+              <li>As datas são formatadas para o padrão <strong>DD/MM/YYYY</strong>.</li>
+              <li>Elementos com a classe “no-print” são ocultados no PDF.</li>
+              <li>Algumas classes são aplicadas para evitar quebras de página indesejadas.</li>
+            </ul>
+          </li>
+        </ul>
+        <h3>Passo 7.2: Geração do PDF</h3>
+        <ul>
+          <li><strong>Processo:</strong> Utilizando a biblioteca <code>html2pdf.js</code>, o conteúdo é convertido e salvo como “balanco-mensal.pdf”.</li>
+          <li><strong>Resultado:</strong> Um arquivo PDF pronto para download ou impressão.</li>
+        </ul>
+      </section>
+      <hr>
+
+      <!-- 8. Considerações Finais -->
+      <section id="consideracoes-finais">
+        <h2>8. Considerações Finais</h2>
+        <ul>
+          <li><strong>Interatividade:</strong> A página permite a inserção dinâmica de dados, com navegação facilitada e atualização automática dos totais.</li>
+          <li><strong>Responsividade:</strong> Adapta-se bem a diferentes tamanhos de tela.</li>
+          <li><strong>Exportação:</strong> A funcionalidade de exportação em PDF facilita o compartilhamento ou impressão do balancete final.</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <p>Tutorial criado para auxiliar na utilização da página "Balanço Financeiro Mensal".</p>
+    <p>&copy; 2024 - Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Script para forçar o carregamento no topo da página -->
+  <script>
+    // Configura o comportamento de scroll ao atualizar a página
+    window.history.scrollRestoration = 'manual';
+    window.onload = function() {
+      window.scrollTo(0, 0);
+    };
+  </script>
+</body>
+</html>
