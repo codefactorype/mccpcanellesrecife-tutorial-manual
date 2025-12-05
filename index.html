@@ -1,342 +1,520 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Tutorial para utilização da página Balanço Financeiro Mensal. Guia completo para gerenciar suas finanças de forma dinâmica e prática.">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <title>Tutorial: Balanço Financeiro Mensal</title>
-  <!-- Importando fontes do Google -->
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans&display=swap" rel="stylesheet">
-  <style>
-    /* 
-      Definindo variáveis CSS para cores e espaçamentos que facilitarão futuras manutenções
-    */
-    :root {
-      --color-background: #ecf0f1; /* Fundo neutro */
-      --color-text: #2c3e50; /* Texto principal */
-      --color-link: #3498db; /* Azul harmônico para links */
-      --color-nav: rgba(44, 62, 80, 0.6); /* Cor de fundo da navegação */
-      --color-overlay: rgba(44, 62, 80, 0.7); /* Overlay para o cabeçalho */
-      --color-border: #bdc3c7; /* Bordas e separadores */
-      --color-secondary: #7f8c8d; /* Texto secundário, ex: rodapé */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balanço Financeiro Mensal</title>
+    <style>
+        /* CSS GERAL */
+        body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; color: #333; }
+        header { text-align: center; background-color: #212121; color: #fff; padding: 20px; margin-bottom: 20px; }
+        header h1 { margin: 0; font-size: 24px; }
+        header p { margin: 5px 0; font-size: 14px; }
+        .container { width: 95%; max-width: 1200px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .section-title { font-weight: bold; margin-top: 30px; text-align: center; font-size: 18px; color: #212121; }
+        table { width: 100%; border-collapse: collapse; margin: 20px auto 10px auto; font-size: 14px; text-align: center; }
+        th, td { border: 1px solid #ddd; text-align: center; padding: 8px; vertical-align: middle; }
+        th { background-color: #212121; font-weight: bold; color: #fff; }
+        td input, td textarea { width: 90%; padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+        
+        .btn-trash { background-color: #e53935; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; font-size: 16px; line-height: 1; }
+        .btn-trash:hover { background-color: #b71c1c; }
+        .btn-container { text-align: center; margin-top: 10px; }
+        .btn { display: inline-block; background-color: #212121; color: white; padding: 10px 15px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .btn-sort { background-color: #FF9800; }
+        .btn:hover { opacity: 0.9; }
 
-    /* Reset e Configurações de Base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      height: 100%;
-      background-color: var(--color-background);
-      font-family: 'Open Sans', sans-serif;
-      color: var(--color-text);
-      line-height: 1.6;
-    }
-    a {
-      color: var(--color-link);
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
+        .import-section { background-color: #f1f1f1; border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 10px; display: none; }
+        .import-grid { display: flex; gap: 15px; flex-wrap: wrap; }
+        .import-col { flex: 1; min-width: 250px; }
+        
+        .balance-header { text-align: center; margin-bottom: 20px; }
+        .balance-inputs-container { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .balance-input-group { display: flex; align-items: center; gap: 10px; }
+        .balance-input-group label { width: 180px; text-align: right; font-weight: bold; }
+        
+        .totals { text-align: center; font-size: 16px; margin-top: 20px; }
+        .totals span { font-weight: bold; color: #000; cursor: pointer; text-decoration: underline; }
+        .totals-table { margin: 0 auto; width: 90%; border: 1px solid #ddd; margin-top: 20px; font-size: 14px; text-align: center; }
+        .totals-table td { border: 1px solid #ddd; padding: 8px; font-size: 14px; text-align: center; }
+        
+        /* Modais */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: #fff; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 8px; text-align: center; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        
+        .avoid-page-break { page-break-inside: avoid; break-inside: avoid; }
+        .pdf-summary-style { margin-bottom: 30px; border: 2px solid #333; padding: 10px; }
 
-    /* Cabeçalho com imagem de fundo e overlay */
-    header {
-      /* Aplicando gradiente sobre a imagem para garantir boa legibilidade */
-      background: linear-gradient(var(--color-overlay), var(--color-overlay)),
-                  url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')
-                  center center no-repeat;
-      background-size: cover;
-      color: var(--color-background);
-      min-height: 300px;
-      position: relative;
-    }
+        @media only screen and (max-width: 600px) {
+            body { margin: 0; padding: 0; width: 100%; overflow-x: hidden; }
+            .container { width: 100%; padding: 10px; }
+            table { font-size: 12px; display: block; overflow-x: auto; }
+            .balance-input-group { flex-direction: column; gap: 5px; }
+            .balance-input-group label { width: 100%; text-align: center; }
+        }
 
-    /* Barra de Navegação */
-    nav {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: var(--color-nav);
-      padding: 10px 20px;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    nav li {
-      margin: 0 15px;
-    }
-    nav li a {
-      font-weight: bold;
-      font-size: 1em;
-      color: var(--color-background);
-    }
-
-    /* Título e descrição no cabeçalho */
-    .blog-header {
-      text-align: center;
-      margin-top: 40px;
-      padding: 20px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-    }
-    .blog-header h1 {
-      font-family: 'Merriweather', serif;
-      font-size: 2.5em;
-      margin-bottom: 10px;
-      color: var(--color-background);
-    }
-    .blog-header p {
-      font-size: 1.2em;
-      color: var(--color-background);
-    }
-
-    /* Container principal (layout tipo "blog") */
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Estilização de títulos, separadores e listas */
-    h2, h3 {
-      margin-bottom: 10px;
-      color: var(--color-text);
-    }
-    h2 {
-      border-bottom: 2px solid var(--color-border);
-      padding-bottom: 5px;
-      margin-top: 20px;
-    }
-    hr {
-      margin: 20px 0;
-      border: none;
-      border-top: 1px solid var(--color-border);
-    }
-    ul {
-      list-style: disc;
-      margin: 0 0 1em 20px;
-    }
-    code {
-      background-color: var(--color-background);
-      padding: 2px 4px;
-      border-radius: 3px;
-      font-size: 0.95em;
-    }
-
-    /* Rodapé */
-    footer {
-      text-align: center;
-      padding: 20px 0;
-      font-size: 0.9em;
-      color: var(--color-secondary);
-    }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      nav ul {
-        flex-direction: column;
-      }
-      nav li {
-        margin: 10px 0;
-      }
-      .blog-header h1 {
-        font-size: 2em;
-      }
-      .container {
-        margin: 20px 10px;
-        padding: 20px;
-      }
-    }
-  </style>
+        @media print {
+            .no-print { display: none !important; }
+            table, tr, td, th { page-break-inside: avoid; }
+            section, .balance-header, .totals { page-break-inside: avoid; }
+            /* Só esconde a coluna de ações nas tabelas de receitas e despesas na impressão */
+            #receitasTable th:last-child,
+            #receitasTable td:last-child,
+            #despesasTable th:last-child,
+            #despesasTable td:last-child {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div id="exportContent">
+        <header class="avoid-page-break">
+            <h1>Balanço Financeiro Mensal</h1>
+            <p>Instituto PE. Paulo Canelles do Recife</p>
+            <p>CNPJ: 11.500.204/0001-08</p>
+        </header>
 
-  <!-- Cabeçalho do Blog -->
-  <header>
-    <!-- Barra de Navegação -->
-    <nav>
-      <ul>
-        <li><a href="#visao-geral">Visão Geral</a></li>
-        <li><a href="#selecao-periodo">Período</a></li>
-        <li><a href="#insercao-saldo-inicial">Saldo Inicial</a></li>
-        <li><a href="#registro-transacoes">Transações</a></li>
-        <li><a href="#calculo-totais">Totais</a></li>
-        <li><a href="#exportacao-pdf">Exportação</a></li>
-      </ul>
-    </nav>
+        <main class="container">
+            <div class="no-print avoid-page-break" style="margin-bottom: 25px;">
+                <button class="btn" id="toggleImportBtn" style="background-color: #2e7d32; width: 100%;">📂 Importar Dados (Colar)</button>
+                <div id="importPanel" class="import-section">
+                    <p style="font-size: 13px; margin-bottom: 10px; text-align: center;">
+                        <strong>Instruções:</strong> Copie do Excel e cole abaixo. Formato: <code>DATA ; DESCRIÇÃO ; VALOR</code>
+                    </p>
+                    <div class="import-grid">
+                        <div class="import-col">
+                            <label>Colar Receitas:</label>
+                            <textarea id="importReceitasInput" rows="6" style="width: 100%; box-sizing: border-box;"></textarea>
+                        </div>
+                        <div class="import-col">
+                            <label>Colar Despesas:</label>
+                            <textarea id="importDespesasInput" rows="6" style="width: 100%; box-sizing: border-box;"></textarea>
+                        </div>
+                    </div>
+                    <div class="btn-container" style="text-align: right; margin-top: 15px;">
+                        <button class="btn" id="processImportBtn" style="background-color: #1976d2;">Adicionar e Ordenar</button>
+                    </div>
+                </div>
+            </div>
 
-    <!-- Título e Subtítulo -->
-    <div class="blog-header">
-      <h1>Tutorial: Balanço Financeiro Mensal (manual)</h1>
-      <p>Guia Completo para Gerenciar suas Finanças com Eficiência</p>
+            <div class="balance-header no-print avoid-page-break">
+                <label for="month">Mês:</label>
+                <select id="month">
+                    <option value="Janeiro">Janeiro</option>
+                    <option value="Fevereiro">Fevereiro</option>
+                    <option value="Março">Março</option>
+                    <option value="Abril">Abril</option>
+                    <option value="Maio">Maio</option>
+                    <option value="Junho">Junho</option>
+                    <option value="Julho">Julho</option>
+                    <option value="Agosto">Agosto</option>
+                    <option value="Setembro">Setembro</option>
+                    <option value="Outubro">Outubro</option>
+                    <option value="Novembro" selected>Novembro</option>
+                    <option value="Dezembro">Dezembro</option>
+                </select>
+                <label for="year">Ano:</label>
+                <input type="number" id="year" placeholder="2024" value="2024" min="1900" max="2100">
+                <button class="btn" id="updateButton">Atualizar Título</button>
+            </div>
+
+            <section class="avoid-page-break">
+                <div id="balanceTitle" class="section-title">Balancete Mensal - Novembro 2024</div>
+                
+                <div class="balance-header">
+                    <div class="balance-inputs-container">
+                        <div class="balance-input-group">
+                            <label for="saldoAnterior">Saldo Anterior (banco):</label>
+                            <input type="text" id="saldoAnterior" placeholder="R$ 0,00">
+                        </div>
+                        <div class="balance-input-group">
+                            <label for="saldoAnteriorCaixa">Saldo Anterior (caixa):</label>
+                            <input type="text" id="saldoAnteriorCaixa" placeholder="R$ 0,00">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sectionReceitas" class="avoid-page-break">
+                <div class="section-title">RECEITAS</div>
+                <table id="receitasTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">DATA</th>
+                            <th style="width: 50%;">DESCRIÇÃO</th>
+                            <th style="width: 20%;">VALOR</th>
+                            <th class="no-print" style="width: 10%;">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="date"></td>
+                            <td><input type="text" placeholder="Descrição"></td>
+                            <td><input type="text" class="valor" placeholder="R$ 0,00"></td>
+                            <td class="no-print"><button class="btn-trash" onclick="deleteRow(this)">🗑</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="btn-container no-print">
+                    <button class="btn" id="addReceita">Adicionar Linha</button>
+                    <button class="btn btn-sort" id="sortReceitas">⬇ Ordenar por Data</button>
+                </div>
+            </section>
+
+            <section class="avoid-page-break">
+                <div class="section-title">DESPESAS</div>
+                <table id="despesasTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">DATA</th>
+                            <th style="width: 50%;">DESCRIÇÃO</th>
+                            <th style="width: 20%;">VALOR</th>
+                            <th class="no-print" style="width: 10%;">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="date"></td>
+                            <td><input type="text" placeholder="Descrição"></td>
+                            <td><input type="text" class="valor" placeholder="R$ 0,00"></td>
+                            <td class="no-print"><button class="btn-trash" onclick="deleteRow(this)">🗑</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="btn-container no-print">
+                    <button class="btn" id="addDespesa">Adicionar Linha</button>
+                    <button class="btn btn-sort" id="sortDespesas">⬇ Ordenar por Data</button>
+                </div>
+            </section>
+
+            <section id="sectionTotals" class="totals avoid-page-break">
+                <table class="totals-table">
+                    <tr>
+                        <td><span data-modal="saldoAnteriorModal">Saldo Anterior Total (Banco + Caixa):</span></td>
+                        <td><span id="saldoAnteriorDisplay">R$ 0,00</span></td>
+                    </tr>
+                    <tr>
+                        <td><span data-modal="totalReceitasModal">Total de Receitas:</span></td>
+                        <td><span id="totalReceitas">R$ 0,00</span></td>
+                    </tr>
+                    <tr>
+                        <td><span data-modal="totalDespesasModal">Total de Despesas:</span></td>
+                        <td><span id="totalDespesas">R$ 0,00</span></td>
+                    </tr>
+                    <tr>
+                        <td><span data-modal="saldoAtualModal">Saldo Atual:</span></td>
+                        <td><span id="saldoAtual">R$ 0,00</span></td>
+                    </tr>
+                </table>
+                <div class="btn-container no-print">
+                    <button class="btn" id="exportButton">Exportar PDF</button>
+                </div>
+            </section>
+        </main>
     </div>
-  </header>
 
-  <!-- Conteúdo Principal -->
-  <main class="container">
-    <article>
-      <!-- 1. Visão Geral da Página -->
-      <section id="visao-geral">
-        <h2>1. Visão Geral da Página</h2>
-        <p>A página foi desenvolvida para auxiliar no controle financeiro mensal, permitindo o registro de receitas e despesas, o cálculo automático dos totais e a geração de um PDF com o balancete final. Ela conta com seções para definir o período (mês e ano), inserir o <strong>Saldo Inicial</strong>, registrar transações e visualizar os totais atualizados, além de modais informativos para esclarecimentos sobre cada item.</p>
-      </section>
-      <hr>
+    <div id="saldoAnteriorModal" class="modal"><div class="modal-content"><span class="close" data-close="saldoAnteriorModal">&times;</span><p>Soma dos saldos em Banco e Caixa.</p></div></div>
+    <div id="totalReceitasModal" class="modal"><div class="modal-content"><span class="close" data-close="totalReceitasModal">&times;</span><p>Soma das receitas.</p></div></div>
+    <div id="totalDespesasModal" class="modal"><div class="modal-content"><span class="close" data-close="totalDespesasModal">&times;</span><p>Soma das despesas.</p></div></div>
+    <div id="saldoAtualModal" class="modal"><div class="modal-content"><span class="close" data-close="saldoAtualModal">&times;</span><p>Saldo Anterior + Receitas - Despesas.</p></div></div>
 
-      <!-- 2. Seleção do Período e Atualização do Título -->
-      <section id="selecao-periodo">
-        <h2>2. Seleção do Período e Atualização do Título</h2>
-        <h3>Passo 2.1: Seleção do Mês</h3>
-        <ul>
-          <li><strong>Local:</strong> Na parte superior da página, dentro do cabeçalho principal (balancete).</li>
-          <li><strong>Como fazer:</strong> Selecione o mês desejado no campo “Mês”. Note que o mês atualmente selecionado é “Novembro”, mas você pode escolher qualquer um na lista.</li>
-        </ul>
-        <h3>Passo 2.2: Definir o Ano</h3>
-        <ul>
-          <li><strong>Local:</strong> Ao lado da seleção do mês.</li>
-          <li><strong>Como fazer:</strong> Informe o ano desejado no campo numérico (por padrão, vem preenchido com “2024”).</li>
-        </ul>
-        <h3>Passo 2.3: Atualizar o Título</h3>
-        <ul>
-          <li><strong>Botão:</strong> Clique no botão “Atualizar”.</li>
-          <li><strong>O que acontece:</strong> O título da página (na área “Balancete Mensal”) será atualizado para refletir o mês e ano escolhidos, por exemplo: “Balancete Mensal - Novembro 2024”.</li>
-        </ul>
-      </section>
-      <hr>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
-      <!-- 3. Inserção e Formatação do Saldo Inicial -->
-      <section id="insercao-saldo-inicial">
-        <h2>3. Inserção e Formatação do Saldo Inicial</h2>
-        <h3>Passo 3.1: Inserir o Saldo Inicial</h3>
-        <ul>
-          <li><strong>Local:</strong> Logo abaixo do título do balancete.</li>
-          <li><strong>Como fazer:</strong> No campo “Saldo Inicial (banco)”, insira o valor disponível no início do mês. <em>Exemplo:</em> Digite “R$ 500,00”.</li>
-        </ul>
-        <h3>Passo 3.2: Formatação Automática</h3>
-        <ul>
-          <li><strong>Quando:</strong> Ao sair do campo (evento “blur”) ou pressionando a tecla Enter.</li>
-          <li><strong>O que acontece:</strong> O valor inserido é formatado automaticamente para o padrão de moeda brasileiro (R$). Se o valor inserido não for válido, o campo será reajustado para “R$ 0,00”.</li>
-        </ul>
-      </section>
-      <hr>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateButton = document.getElementById('updateButton');
+            const saldoAnteriorInput = document.getElementById('saldoAnterior');
+            const saldoAnteriorCaixaInput = document.getElementById('saldoAnteriorCaixa');
+            const addReceitaButton = document.getElementById('addReceita');
+            const sortReceitasButton = document.getElementById('sortReceitas');
+            const addDespesaButton = document.getElementById('addDespesa');
+            const sortDespesasButton = document.getElementById('sortDespesas');
+            const exportButton = document.getElementById('exportButton');
+            const toggleImportBtn = document.getElementById('toggleImportBtn');
+            const processImportBtn = document.getElementById('processImportBtn');
 
-      <!-- 4. Registro de Transações (Receitas e Despesas) -->
-      <section id="registro-transacoes">
-        <h2>4. Registro de Transações (Receitas e Despesas)</h2>
-        <h3>4.1 Seção de Receitas</h3>
-        <ul>
-          <li>
-            <strong>Estrutura da Tabela:</strong>
-            <ul>
-              <li><strong>DATA:</strong> Insira a data da receita (tipo data).</li>
-              <li><strong>DESCRIÇÃO:</strong> Informe uma breve descrição da entrada financeira.</li>
-              <li><strong>VALOR:</strong> Digite o valor da receita (campo com formatação de moeda, que será atualizado automaticamente).</li>
-            </ul>
-          </li>
-          <li><strong>Adicionar Linhas:</strong> Clique no botão “Adicionar Linha” para incluir uma nova linha na tabela de receitas.</li>
-          <li>
-            <strong>Remover Linhas:</strong> Clique no botão “Remover Linha” para excluir a última linha inserida.
-            <br>
-            <em>Observação:</em> A remoção não pode eliminar todas as linhas; pelo menos uma linha deve permanecer.
-          </li>
-          <li><strong>Navegação entre os Campos:</strong> Pressione a tecla Enter para navegar entre os campos. Se o usuário estiver no último campo e pressionar Enter, uma nova linha será adicionada e o foco passará para o novo campo.</li>
-        </ul>
+            updateButton.addEventListener('click', updateBalanceTitle);
+            
+            [saldoAnteriorInput, saldoAnteriorCaixaInput].forEach(el => {
+                el.addEventListener('input', calculateTotals);
+                el.addEventListener('blur', () => formatCurrency(el));
+                el.addEventListener('keydown', handleEnterKey);
+            });
 
-        <h3>4.2 Seção de Despesas</h3>
-        <ul>
-          <li>
-            <strong>Estrutura da Tabela:</strong>
-            <ul>
-              <li><strong>DATA:</strong> Insira a data da despesa.</li>
-              <li><strong>DESCRIÇÃO:</strong> Informe o tipo ou motivo da despesa.</li>
-              <li><strong>VALOR:</strong> Digite o valor da despesa com formatação automática.</li>
-            </ul>
-          </li>
-          <li><strong>Adicionar/Remover Linhas:</strong> Mesmo procedimento da seção de receitas.</li>
-          <li><strong>Formatação e Navegação:</strong> Igual ao processo explicado na seção de receitas.</li>
-        </ul>
-      </section>
-      <hr>
+            addReceitaButton.addEventListener('click', () => addRow('receitasTable'));
+            sortReceitasButton.addEventListener('click', () => sortTableByDate('receitasTable'));
+            addDespesaButton.addEventListener('click', () => addRow('despesasTable'));
+            sortDespesasButton.addEventListener('click', () => sortTableByDate('despesasTable'));
+            
+            exportButton.addEventListener('click', exportData);
 
-      <!-- 5. Cálculo e Visualização dos Totais -->
-      <section id="calculo-totais">
-        <h2>5. Cálculo e Visualização dos Totais</h2>
-        <h3>Passo 5.1: Cálculo Automático</h3>
-        <ul>
-          <li>
-            <strong>Como funciona:</strong> A cada modificação nos valores (Saldo Inicial, receitas ou despesas), a função <code>calculateTotals</code> é chamada para recalcular:
-            <ul>
-              <li><strong>Saldo Inicial:</strong> Valor digitado e formatado.</li>
-              <li><strong>Total de Receitas:</strong> Soma de todos os valores inseridos na tabela de receitas.</li>
-              <li><strong>Total de Despesas:</strong> Soma de todos os valores inseridos na tabela de despesas.</li>
-              <li><strong>Saldo Atual:</strong> Calculado como <strong>Saldo Inicial + Total de Receitas - Total de Despesas</strong>.</li>
-            </ul>
-          </li>
-        </ul>
-        <h3>Passo 5.2: Visualização</h3>
-        <ul>
-          <li><strong>Local:</strong> Os totais são exibidos em uma tabela de resumo na seção “Totais”.</li>
-          <li><strong>Formato:</strong> Cada valor é exibido no padrão monetário brasileiro.</li>
-        </ul>
-      </section>
-      <hr>
+            toggleImportBtn.addEventListener('click', () => {
+                const panel = document.getElementById('importPanel');
+                panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+                toggleImportBtn.textContent = (panel.style.display === 'block') ? '❌ Fechar Importação' : '📂 Importar Dados (Colar)';
+            });
 
-      <!-- 7. Exportação dos Dados para PDF -->
-      <section id="exportacao-pdf">
-        <h2>7. Exportação dos Dados para PDF</h2>
-        <h3>Passo 7.1: Preparação para Exportação</h3>
-        <ul>
-          <li><strong>Botão:</strong> Clique no botão “Exportar Dados” na seção de totais.</li>
-          <li>
-            <strong>O que acontece:</strong> Todo o conteúdo (transações e totais) é clonado e processado:
-            <ul>
-              <li>As datas são formatadas para o padrão <strong>DD/MM/YYYY</strong>.</li>
-              <li>Elementos com a classe “no-print” são ocultados no PDF.</li>
-              <li>Algumas classes são aplicadas para evitar quebras de página indesejadas.</li>
-            </ul>
-          </li>
-        </ul>
-        <h3>Passo 7.2: Geração do PDF</h3>
-        <ul>
-          <li><strong>Processo:</strong> Utilizando a biblioteca <code>html2pdf.js</code>, o conteúdo é convertido e salvo como “balanco-mensal.pdf”.</li>
-          <li><strong>Resultado:</strong> Um arquivo PDF pronto para download ou impressão.</li>
-        </ul>
-      </section>
-      <hr>
+            processImportBtn.addEventListener('click', processImportData);
 
-      <!-- 8. Considerações Finais -->
-      <section id="consideracoes-finais">
-        <h2>8. Considerações Finais</h2>
-        <ul>
-          <li><strong>Interatividade:</strong> A página permite a inserção dinâmica de dados, com navegação facilitada e atualização automática dos totais.</li>
-          <li><strong>Responsividade:</strong> Adapta-se bem a diferentes tamanhos de tela.</li>
-          <li><strong>Exportação:</strong> A funcionalidade de exportação em PDF facilita o compartilhamento ou impressão do balancete final.</li>
-        </ul>
-      </section>
-    </article>
-  </main>
+            attachTableEvents('receitasTable');
+            attachTableEvents('despesasTable');
+            attachModalEvents();
+            updateBalanceTitle();
+        });
 
-  <!-- Rodapé -->
-  <footer>
-    <p>Tutorial criado para auxiliar na utilização da página "Balanço Financeiro Mensal".</p>
-    <p>&copy; 2024 - Todos os direitos reservados.</p>
-  </footer>
+        window.deleteRow = function(btn) {
+            const row = btn.closest('tr');
+            const tableBody = row.parentNode;
+            const tableId = tableBody.closest('table').id;
+            row.remove();
+            if (tableBody.rows.length === 0) addRow(tableId);
+            calculateTotals();
+        };
 
-  <!-- Script para forçar o carregamento no topo da página -->
-  <script>
-    // Configura o comportamento de scroll ao atualizar a página
-    window.history.scrollRestoration = 'manual';
-    window.onload = function() {
-      window.scrollTo(0, 0);
-    };
-  </script>
+        function sortTableByDate(tableId) {
+            const tableBody = document.getElementById(tableId).querySelector('tbody');
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+            rows.sort((a, b) => {
+                const valA = a.querySelector('input[type="date"]')?.value || '';
+                const valB = b.querySelector('input[type="date"]')?.value || '';
+                if (valA === valB) return 0;
+                return valA === '' ? 1 : (valB === '' ? -1 : valA.localeCompare(valB));
+            });
+            rows.forEach(row => tableBody.appendChild(row));
+        }
+
+        function processImportData() {
+            const r = document.getElementById('importReceitasInput').value;
+            const d = document.getElementById('importDespesasInput').value;
+            if (!r.trim() && !d.trim()) { alert("Cole dados em pelo menos um campo."); return; }
+            if (r.trim()) parseAndPopulate(r, 'receitasTable');
+            if (d.trim()) parseAndPopulate(d, 'despesasTable');
+            sortTableByDate('receitasTable');
+            sortTableByDate('despesasTable');
+            calculateTotals();
+            document.getElementById('importReceitasInput').value = '';
+            document.getElementById('importDespesasInput').value = '';
+            document.getElementById('importPanel').style.display = 'none';
+            document.getElementById('toggleImportBtn').textContent = '📂 Importar Dados (Colar)';
+            alert("Dados importados!");
+        }
+
+        function parseAndPopulate(text, tableId) {
+            const tableBody = document.getElementById(tableId).querySelector('tbody');
+            const firstRow = tableBody.rows[0];
+            const inputs = firstRow ? firstRow.querySelectorAll('input') : [];
+            if (tableBody.rows.length === 1 && inputs.length > 0 && !inputs[1].value && !inputs[2].value) tableBody.deleteRow(0);
+
+            text.split(/\r?\n/).forEach(line => {
+                if (!line.trim()) return;
+                let parts = line.split(/;|\t/);
+                if (parts.length >= 2) {
+                    const row = tableBody.insertRow(-1);
+                    const cellD = row.insertCell(0);
+                    const inpD = document.createElement('input'); inpD.type='date';
+                    if (parts[0].match(/\d/) && parts.length >= 3) inpD.value = convertToISODate(parts[0].trim());
+                    cellD.appendChild(inpD);
+                    
+                    const cellDesc = row.insertCell(1);
+                    const inpDesc = document.createElement('input'); inpDesc.type='text';
+                    let descIdx = parts.length >= 3 ? 1 : 0;
+                    inpDesc.value = parts[descIdx] ? parts[descIdx].trim() : '';
+                    cellDesc.appendChild(inpDesc);
+
+                    const cellVal = row.insertCell(2);
+                    const inpVal = document.createElement('input'); inpVal.type='text'; inpVal.className='valor';
+                    let valIdx = parts.length >= 3 ? 2 : 1;
+                    let rawVal = parts[valIdx] ? parts[valIdx].trim() : '0';
+                    inpVal.value = parseImportedValueToFloat(rawVal).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                    cellVal.appendChild(inpVal);
+
+                    const cellAct = row.insertCell(3); cellAct.className='no-print';
+                    cellAct.innerHTML = '<button class="btn-trash" onclick="deleteRow(this)">🗑</button>';
+                }
+            });
+        }
+
+        function parseImportedValueToFloat(v) {
+            if(!v) return 0; v=v.replace(/R\$|\s/g,'');
+            const c=v.lastIndexOf(','), d=v.lastIndexOf('.');
+            if(c>d) v=v.replace(/\./g,'').replace(',','.');
+            else if(d>c) v=v.replace(/,/g,'');
+            return parseFloat(v)||0;
+        }
+
+        function convertToISODate(d) {
+            const p = d.split(/[\/\-\.]/);
+            if(p.length===3) {
+                let y=p[2]; if(y.length===2) y='20'+y;
+                return `${y}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
+            }
+            return '';
+        }
+
+        function attachTableEvents(tid) {
+            const t = document.getElementById(tid);
+            t.addEventListener('input', e => { if(e.target.matches('input.valor')) calculateTotals(); });
+            t.addEventListener('blur', e => { if(e.target.matches('input.valor')) formatCurrency(e.target); }, true);
+            t.addEventListener('keydown', e => { if(e.target.matches('input') && e.key==='Enter') { e.preventDefault(); handleEnterInTable(e, tid); } });
+        }
+
+        function handleEnterInTable(e, tid) {
+            const inputs = Array.from(document.querySelectorAll(`#${tid} tbody input`));
+            const idx = inputs.indexOf(e.target);
+            if(idx >= 0 && idx < inputs.length-1) inputs[idx+1].focus();
+            else { addRow(tid); document.querySelector(`#${tid} tbody tr:last-child input`).focus(); }
+        }
+
+        function handleEnterKey(e) { if(e.key==='Enter') { e.preventDefault(); formatCurrency(e.target); } }
+
+        function addRow(tid) {
+            const r = document.getElementById(tid).querySelector('tbody').insertRow();
+            r.insertCell(0).innerHTML = '<input type="date">';
+            r.insertCell(1).innerHTML = '<input type="text" placeholder="Descrição">';
+            r.insertCell(2).innerHTML = '<input type="text" class="valor" placeholder="R$ 0,00">';
+            const c = r.insertCell(3); c.className = 'no-print';
+            c.innerHTML = '<button class="btn-trash" onclick="deleteRow(this)">🗑</button>';
+        }
+
+        function updateBalanceTitle() {
+            const m = document.getElementById('month').value;
+            const y = document.getElementById('year').value || new Date().getFullYear();
+            document.getElementById('balanceTitle').textContent = `Balancete Mensal - ${m} ${y}`;
+        }
+
+        function formatCurrency(input) {
+            let v = input.value;
+            if(typeof v==='string') v=v.replace(/\s/g,'').replace('R$','').replace(/\./g,'').replace(',','.');
+            const n = parseFloat(v);
+            input.value = !isNaN(n) ? n.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}) : 'R$ 0,00';
+            calculateTotals();
+        }
+
+        function parseCurrency(v) {
+            if(typeof v==='string') v=v.replace(/\s/g,'').replace('R$','').replace(/\./g,'').replace(',','.');
+            return parseFloat(v)||0;
+        }
+
+        function calculateTotals() {
+            const sb = parseCurrency(document.getElementById('saldoAnterior').value);
+            const sc = parseCurrency(document.getElementById('saldoAnteriorCaixa').value);
+            const st = sb + sc;
+            let tr=0, td=0;
+            document.querySelectorAll('#receitasTable tbody input.valor').forEach(i => tr += parseCurrency(i.value));
+            document.querySelectorAll('#despesasTable tbody input.valor').forEach(i => td += parseCurrency(i.value));
+            
+            document.getElementById('saldoAnteriorDisplay').textContent = st.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+            document.getElementById('totalReceitas').textContent = tr.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+            document.getElementById('totalDespesas').textContent = td.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+            const atual = st + tr - td;
+            const el = document.getElementById('saldoAtual');
+            el.textContent = atual.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+            el.style.color = atual < 0 ? 'red' : 'green';
+        }
+
+        function exportData() {
+            // 1. Garante formatação antes de clonar
+            document.querySelectorAll('input.valor, #saldoAnterior, #saldoAnteriorCaixa').forEach(i => {
+                if(i.value.trim() !== '') formatCurrency(i);
+            });
+            calculateTotals();
+
+            // 2. CAPTURA OS VALORES REAIS DA TELA
+            const realValues = {
+                saldoAntDisplay: document.getElementById('saldoAnteriorDisplay').innerText,
+                totalRec: document.getElementById('totalReceitas').innerText,
+                totalDesp: document.getElementById('totalDespesas').innerText,
+                saldoAtual: document.getElementById('saldoAtual').innerText,
+                inputBanco: document.getElementById('saldoAnterior').value,
+                inputCaixa: document.getElementById('saldoAnteriorCaixa').value
+            };
+
+            // 3. CLONA
+            const element = document.getElementById('exportContent').cloneNode(true);
+
+            // 4. INJETA OS VALORES CAPTURADOS NO CLONE (TOTAIS)
+            element.querySelector('#saldoAnteriorDisplay').innerText = realValues.saldoAntDisplay;
+            element.querySelector('#totalReceitas').innerText = realValues.totalRec;
+            element.querySelector('#totalDespesas').innerText = realValues.totalDesp;
+            element.querySelector('#saldoAtual').innerText = realValues.saldoAtual;
+
+            // 5. INJETA OS VALORES NOS INPUTS DE SALDO (HEADER)
+            const inputBancoClone = element.querySelector('#saldoAnterior');
+            if(inputBancoClone) {
+                const span = document.createElement('span');
+                span.innerText = realValues.inputBanco;
+                inputBancoClone.parentNode.replaceChild(span, inputBancoClone);
+            }
+            const inputCaixaClone = element.querySelector('#saldoAnteriorCaixa');
+            if(inputCaixaClone) {
+                const span = document.createElement('span');
+                span.innerText = realValues.inputCaixa;
+                inputCaixaClone.parentNode.replaceChild(span, inputCaixaClone);
+            }
+
+            // 6. REORGANIZA O LAYOUT PARA O PDF (MOVER TOTAIS PARA O TOPO)
+            const sectionTotals = element.querySelector('#sectionTotals');
+            const sectionReceitas = element.querySelector('#sectionReceitas');
+            
+            if(sectionTotals && sectionReceitas) {
+                sectionReceitas.parentNode.insertBefore(sectionTotals, sectionReceitas);
+                sectionTotals.style.marginBottom = '20px';
+                sectionTotals.style.border = '1px solid #ddd';
+                sectionTotals.style.padding = '10px';
+            }
+
+            // 7. CONVERTE INPUTS DAS TABELAS EM TEXTO
+            const clonedInputs = element.querySelectorAll('input, select');
+            clonedInputs.forEach(input => {
+                const span = document.createElement('span');
+                if (input.type === 'date' && input.value) {
+                    const [y, m, d] = input.value.split('-');
+                    span.innerText = `${d}/${m}/${y}`;
+                } else if (input.tagName === 'SELECT') {
+                    span.innerText = input.options[input.selectedIndex].text;
+                } else {
+                    span.innerText = input.value;
+                }
+                input.parentNode.replaceChild(span, input);
+            });
+
+            // 8. REMOVE ITENS DESNECESSÁRIOS
+            element.querySelectorAll('.no-print, .btn, .btn-trash').forEach(el => el.style.display = 'none');
+
+            // IMPORTANTE: esconder apenas a coluna "AÇÕES" das tabelas de receitas e despesas,
+            // preservando a coluna de valores da tabela de totais.
+            ['receitasTable', 'despesasTable'].forEach(id => {
+                const table = element.querySelector('#' + id);
+                if (!table) return;
+                table.querySelectorAll('th:last-child, td:last-child').forEach(cell => {
+                    cell.style.display = 'none';
+                });
+            });
+
+            // 9. GERA PDF
+            const opt = {
+                margin: 0.5,
+                filename: 'balanco-financeiro.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function attachModalEvents() {
+            document.querySelectorAll('.totals span[data-modal]').forEach(s => {
+                s.addEventListener('click', () => document.getElementById(s.getAttribute('data-modal')).style.display='block');
+            });
+            document.querySelectorAll('.close').forEach(c => {
+                c.addEventListener('click', () => document.getElementById(c.getAttribute('data-close')).style.display='none');
+            });
+            window.onclick = e => { if(e.target.classList.contains('modal')) e.target.style.display='none'; };
+        }
+    </script>
 </body>
 </html>
